@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { subscribeAgentEvent } from '../../src/events'
 import { getTools } from '../../src/registry'
 import { useAgentTool } from '../../src/hooks/useAgentTool'
+import { useAgentContext } from '../../src/hooks/useAgentContext'
 
 // ---------------------------------------------------------------------------
 // Schemas — defined outside components so references are stable
@@ -159,6 +160,73 @@ function EventLog() {
 }
 
 // ---------------------------------------------------------------------------
+// useAgentContext demo — shopping cart
+// ---------------------------------------------------------------------------
+
+const PRODUCTS = ['Laptop', 'Mouse', 'Keyboard', 'Monitor', 'Headphones']
+
+function ShoppingCart() {
+  const [items, setItems] = useState<string[]>([])
+  const [lastSnapshot, setLastSnapshot] = useState<unknown>(null)
+
+  // Cart state lives only in React — there is no global singleton to read from.
+  // useAgentContext exposes it so agents can read it on demand.
+  useAgentContext(
+    'shopping_cart',
+    'Current items in the shopping cart and their count',
+    () => ({ items, count: items.length }),
+  )
+
+  function toggle(product: string) {
+    setItems(prev =>
+      prev.includes(product) ? prev.filter(p => p !== product) : [...prev, product],
+    )
+  }
+
+  function simulate() {
+    getTools()
+      .find(t => t.name === 'shopping_cart')
+      ?.execute({})
+      .then(result => setLastSnapshot(result))
+      .catch(() => {})
+  }
+
+  return (
+    <div style={{ border: '1px solid #ddd', borderRadius: 4, padding: 12 }}>
+      <div style={{ marginBottom: 12 }}>
+        <strong>Cart</strong> — tick items to add them, then let the agent read it:
+      </div>
+
+      <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap', marginBottom: 12 }}>
+        {PRODUCTS.map(product => (
+          <label key={product} style={{ display: 'flex', alignItems: 'center', gap: 4, cursor: 'pointer' }}>
+            <input
+              type="checkbox"
+              checked={items.includes(product)}
+              onChange={() => toggle(product)}
+            />
+            {product}
+          </label>
+        ))}
+      </div>
+
+      <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
+        <button onClick={simulate}>▶ simulate agent read</button>
+        <span style={{ color: '#666', fontSize: '0.9em' }}>
+          {items.length === 0 ? 'cart is empty' : `${items.length} item(s) in cart`}
+        </span>
+      </div>
+
+      {lastSnapshot !== null && (
+        <div style={{ marginTop: 12, fontSize: '0.9em' }}>
+          Agent saw: <code>{JSON.stringify(lastSnapshot)}</code>
+        </div>
+      )}
+    </div>
+  )
+}
+
+// ---------------------------------------------------------------------------
 // App
 // ---------------------------------------------------------------------------
 
@@ -195,6 +263,15 @@ export default function App() {
         {TOOLS.map(({ id, Component }) =>
           mounted[id] ? <Component key={id} /> : null
         )}
+      </section>
+
+      <section style={{ marginBottom: 24 }}>
+        <h3 style={{ marginBottom: 8 }}>useAgentContext</h3>
+        <p style={{ margin: '0 0 12px', color: '#666', fontSize: '0.9em' }}>
+          Cart state lives only in React — no global singleton. Tick items, then simulate
+          an agent read to see the snapshot taken at call time.
+        </p>
+        <ShoppingCart />
       </section>
 
       <EventLog />

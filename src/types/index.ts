@@ -79,6 +79,7 @@ export interface ToolDefinition<T extends JsonSchema = JsonSchema> {
   description: string
   inputSchema: T
   execute: (input: InferInput<T>) => Promise<unknown>
+  readOnlyHint?: boolean
 }
 
 // ---------------------------------------------------------------------------
