@@ -3,6 +3,7 @@ import { subscribeAgentEvent } from '../../src/events'
 import { getTools } from '../../src/registry'
 import { useAgentTool } from '../../src/hooks/useAgentTool'
 import { useAgentContext } from '../../src/hooks/useAgentContext'
+import { useAgentEvent } from '../../src/hooks/useAgentEvent'
 
 // ---------------------------------------------------------------------------
 // Schemas — defined outside components so references are stable
@@ -88,7 +89,14 @@ function ToolState({ name, state, fakeInput }: ToolStateProps) {
   return (
     <div style={{ border: '1px solid #ddd', borderRadius: 4, padding: 12, marginBottom: 8 }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <strong>{name}</strong>
+        <span>
+          <span style={{
+            display: 'inline-block', width: 8, height: 8, borderRadius: '50%',
+            background: state.isExecuting ? '#16a34a' : '#d1d5db',
+            marginRight: 6, verticalAlign: 'middle',
+          }} />
+          <strong>{name}</strong>
+        </span>
         <button onClick={simulate} disabled={state.isExecuting}>
           {state.isExecuting ? 'executing…' : '▶ simulate agent call'}
         </button>
@@ -236,6 +244,26 @@ const TOOLS = [
   { id: 'failing_tool', Component: FailingTool },
 ]
 
+function AgentBanner() {
+  const [activeTool, setActiveTool] = useState<string | null>(null)
+
+  useAgentEvent('tool:executing', ({ toolName }) => setActiveTool(toolName))
+  useAgentEvent('tool:done', () => setActiveTool(null))
+  useAgentEvent('tool:error', () => setActiveTool(null))
+
+  if (!activeTool) return null
+  return (
+    <div style={{
+      position: 'fixed', top: 0, left: 0, right: 0,
+      background: '#2563eb', color: '#fff',
+      padding: '8px 16px', textAlign: 'center', zIndex: 100,
+    }}>
+      Agent is executing <strong>{activeTool}</strong>…
+    </div>
+  )
+}
+
+
 export default function App() {
   const [mounted, setMounted] = useState<Record<string, boolean>>({})
 
@@ -245,7 +273,8 @@ export default function App() {
 
   return (
     <div style={{ fontFamily: 'monospace', padding: 24, maxWidth: 760 }}>
-      <h2 style={{ marginTop: 0 }}>useAgentTool Playground</h2>
+      <AgentBanner />
+      <h2 style={{ marginTop: 0 }}>react-agent-tool Playground</h2>
 
       <section style={{ marginBottom: 24 }}>
         <h3 style={{ marginBottom: 8 }}>Mount / Unmount Tools</h3>
@@ -263,6 +292,14 @@ export default function App() {
         {TOOLS.map(({ id, Component }) =>
           mounted[id] ? <Component key={id} /> : null
         )}
+      </section>
+
+      <section style={{ marginBottom: 24 }}>
+        <h3 style={{ marginBottom: 8 }}>useAgentEvent</h3>
+        <p style={{ margin: '0 0 8px', color: '#666', fontSize: '0.9em' }}>
+          The blue banner at the top uses <code>useAgentEvent</code> with no filter — fires for any tool.
+          The dot next to each tool name uses it with a <code>toolName</code> filter — scoped to that tool only.
+        </p>
       </section>
 
       <section style={{ marginBottom: 24 }}>

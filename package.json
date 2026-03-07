@@ -18,7 +18,7 @@
     "type": "git",
     "url": "git+https://github.com/littleplato/react-agent-tool.git"
   },
-  "license": "ISC",
+  "license": "MIT",
   "author": "littleplato",
   "type": "module",
   "main": "./dist/index.cjs",

@@ -1,6 +1,17 @@
-// react-agent-tool public exports
-// populated in the future
+export { useAgentTool } from './hooks/useAgentTool'
+export type { UseAgentToolOptions } from './hooks/useAgentTool'
+export { useAgentContext } from './hooks/useAgentContext'
+export { useAgentEvent } from './hooks/useAgentEvent'
 
-export function greet(name: string): string {
-  return `Hello from react-agent-tool, ${name}!`
-}
+export { installPolyfill } from './polyfill'
+
+export type {
+  JsonSchema,
+  JsonSchemaTypeName,
+  InferInput,
+  ToolDefinition,
+  ModelContextAPI,
+  AgentToolState,
+  AgentEventType,
+  AgentEventPayloadMap,
+} from './types'
