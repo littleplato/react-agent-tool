@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import type { JsonSchema, ToolDefinition, AgentToolState, InferInput } from '../types'
 import { subscribeAgentEvent } from '../events'
+import { toCleanup } from './utils'
 
 export interface UseAgentToolOptions<T extends JsonSchema> {
   name: string
@@ -29,14 +30,22 @@ export function useAgentTool<T extends JsonSchema>({
   useEffect(() => {
     if (!enabled || !navigator.modelContext) return
 
-    const unregister = navigator.modelContext.registerTool({
-      name,
-      description,
-      inputSchema,
-      execute: input => executeRef.current(input as InferInput<T>),
-    })
+    let result: ReturnType<typeof navigator.modelContext.registerTool>
+    try {
+      result = navigator.modelContext.registerTool({
+        name,
+        description,
+        inputSchema,
+        execute: input => executeRef.current(input as InferInput<T>),
+      })
+    } catch (e) {
+      // Native API may throw InvalidStateError on StrictMode double-registration.
+      // The tool is still registered from the first call — safe to ignore.
+      if (e instanceof DOMException && e.name === 'InvalidStateError') return
+      throw e
+    }
 
-    return unregister
+    return toCleanup(result)
   }, [name, description, inputSchema, enabled])
 
   useEffect(() => {
