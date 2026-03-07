@@ -3,7 +3,7 @@ import { emitAgentEvent } from '../events'
 
 const tools = new Map<string, ToolDefinition>()
 
-export function registerTool(definition: ToolDefinition): void {
+export function registerTool(definition: ToolDefinition): () => void {
   const wrapped: ToolDefinition = {
     ...definition,
     execute: async input => {
@@ -20,6 +20,7 @@ export function registerTool(definition: ToolDefinition): void {
     },
   }
   tools.set(definition.name, wrapped)
+  return () => tools.delete(definition.name)
 }
 
 export function unregisterTool(name: string): void {
