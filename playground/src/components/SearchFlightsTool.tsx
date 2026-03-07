@@ -11,12 +11,12 @@ const SEARCH_FLIGHTS_SCHEMA = {
   required: ['origin', 'destination'] as const,
 }
 
-async function searchFlights(origin: string, destination: string) {
+const searchFlights = async (origin: string, destination: string) => {
   await new Promise(r => setTimeout(r, 600))
   return { flights: [`${origin}→${destination} 09:00`, `${origin}→${destination} 14:30`] }
 }
 
-export function SearchFlightsTool() {
+export const SearchFlightsTool = () => {
   const { state } = useAgentTool({
     name: 'search_flights',
     description: 'Search available flights by origin and destination',
@@ -24,7 +24,7 @@ export function SearchFlightsTool() {
     execute: async ({ origin, destination }) => searchFlights(origin, destination),
   })
 
-  function onSimulate() {
+  const onSimulate = () => {
     emitAgentEvent('tool:executing', { toolName: 'search_flights' })
     searchFlights('SIN', 'NRT')
       .then(result => emitAgentEvent('tool:done', { toolName: 'search_flights', result }))

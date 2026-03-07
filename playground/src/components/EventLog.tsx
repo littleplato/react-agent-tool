@@ -14,7 +14,7 @@ const EVENT_COLORS: Record<LogEntry['type'], string> = {
   'tool:error': 'text-red-600',
 }
 
-export function EventLog() {
+export const EventLog = () => {
   const [log, setLog] = useState<LogEntry[]>([])
   const counter = useRef(0)
 

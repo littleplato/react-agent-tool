@@ -8,12 +8,12 @@ const GET_WEATHER_SCHEMA = {
   required: ['city'] as const,
 }
 
-async function getWeather(city: string) {
+const getWeather = async (city: string) => {
   await new Promise(r => setTimeout(r, 300))
   return { city, temp: '22°C', condition: 'Sunny' }
 }
 
-export function GetWeatherTool() {
+export const GetWeatherTool = () => {
   const { state } = useAgentTool({
     name: 'get_weather',
     description: 'Get current weather for a city',
@@ -21,7 +21,7 @@ export function GetWeatherTool() {
     execute: async ({ city }) => getWeather(city),
   })
 
-  function onSimulate() {
+  const onSimulate = () => {
     emitAgentEvent('tool:executing', { toolName: 'get_weather' })
     getWeather('Singapore')
       .then(result => emitAgentEvent('tool:done', { toolName: 'get_weather', result }))

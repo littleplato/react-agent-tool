@@ -4,7 +4,7 @@ import { ToolState } from './ToolState'
 
 const FAILING_SCHEMA = { type: 'object' as const }
 
-export function FailingTool() {
+export const FailingTool = () => {
   const { state } = useAgentTool({
     name: 'failing_tool',
     description: 'Always throws — demonstrates tool:error',
@@ -12,7 +12,7 @@ export function FailingTool() {
     execute: async () => { throw new Error('Something went wrong') },
   })
 
-  function onSimulate() {
+  const onSimulate = () => {
     const err = new Error('Something went wrong')
     emitAgentEvent('tool:executing', { toolName: 'failing_tool' })
     Promise.reject(err)

@@ -3,7 +3,7 @@ import { useAgentContext } from '../../../src/hooks/useAgentContext'
 
 const PRODUCTS = ['Laptop', 'Mouse', 'Keyboard', 'Monitor', 'Headphones']
 
-export function ShoppingCart() {
+export const ShoppingCart = () => {
   const [items, setItems] = useState<string[]>([])
   const [lastSnapshot, setLastSnapshot] = useState<unknown>(null)
 
@@ -13,13 +13,13 @@ export function ShoppingCart() {
     () => ({ items, count: items.length }),
   )
 
-  function toggle(product: string) {
+  const toggle = (product: string) => {
     setItems(prev =>
       prev.includes(product) ? prev.filter(p => p !== product) : [...prev, product],
     )
   }
 
-  function simulate() {
+  const simulate = () => {
     setLastSnapshot({ items, count: items.length })
   }
 

@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useAgentEvent } from '../../../src/hooks/useAgentEvent'
 
-export function AgentBanner() {
+export const AgentBanner = () => {
   const [activeTool, setActiveTool] = useState<string | null>(null)
 
   useAgentEvent('tool:executing', ({ toolName }) => setActiveTool(toolName))
