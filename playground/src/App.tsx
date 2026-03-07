@@ -29,7 +29,8 @@ const DEMO_TOOLS: ToolDefinition[] = [
       },
       required: ['origin', 'destination'],
     },
-    execute: async ({ origin, destination }: { origin: string; destination: string }) => {
+    execute: async (input) => {
+      const { origin, destination } = input as { origin: string; destination: string }
       await new Promise(r => setTimeout(r, 400))
       return { flights: [`${origin}→${destination} 09:00`, `${origin}→${destination} 14:30`] }
     },
@@ -42,7 +43,8 @@ const DEMO_TOOLS: ToolDefinition[] = [
       properties: { city: { type: 'string' } },
       required: ['city'],
     },
-    execute: async ({ city }: { city: string }) => {
+    execute: async (input) => {
+      const { city } = input as { city: string }
       await new Promise(r => setTimeout(r, 200))
       return { city, temp: '22°C', condition: 'Sunny' }
     },
@@ -99,6 +101,8 @@ export default function App() {
     tool.execute(fakeInputs[name] ?? {}).catch(() => {})
   }
 
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore -- globals.d.ts is not visible to the playground's isolated tsconfig
   const polyfillInstalled = !!navigator.modelContext
 
   return (
