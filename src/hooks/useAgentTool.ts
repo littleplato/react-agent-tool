@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import type { JsonSchema, ToolDefinition, AgentToolState, InferInput } from '../types'
-import { subscribeAgentEvent } from '../events'
+import { subscribeAgentEvent, emitAgentEvent } from '../events'
 import { toCleanup } from './utils'
 
 export interface UseAgentToolOptions<T extends JsonSchema> {
@@ -36,7 +36,18 @@ export function useAgentTool<T extends JsonSchema>({
         name,
         description,
         inputSchema,
-        execute: input => executeRef.current(input as InferInput<T>),
+        execute: async input => {
+          emitAgentEvent('tool:executing', { toolName: name })
+          try {
+            const result = await executeRef.current(input as InferInput<T>)
+            emitAgentEvent('tool:done', { toolName: name, result })
+            return result
+          } catch (error) {
+            const err = error instanceof Error ? error : new Error(String(error))
+            emitAgentEvent('tool:error', { toolName: name, error: err })
+            throw err
+          }
+        },
       })
     } catch (e) {
       // Native API may throw InvalidStateError on StrictMode double-registration.

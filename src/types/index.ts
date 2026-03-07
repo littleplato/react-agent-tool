@@ -87,7 +87,7 @@ export interface ToolDefinition<T extends JsonSchema = JsonSchema> {
 // ---------------------------------------------------------------------------
 
 export interface ModelContextAPI {
-  registerTool(definition: ToolDefinition): () => void
+  registerTool(definition: ToolDefinition): (() => void) | { unregister(): void } | void
   getTools(): readonly ToolDefinition[]
 }
 

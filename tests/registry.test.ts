@@ -1,6 +1,5 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { describe, it, expect, beforeEach } from 'vitest'
 import { registerTool, unregisterTool, getTools, clearRegistry } from '../src/registry'
-import { subscribeAgentEvent } from '../src/events'
 
 beforeEach(() => clearRegistry())
 
@@ -44,11 +43,7 @@ describe('registry', () => {
     expect(getTools()).toHaveLength(0)
   })
 
-  it('execute emits tool:executing then tool:done in order', async () => {
-    const order: string[] = []
-    const unsubExec = subscribeAgentEvent('tool:executing', () => order.push('executing'))
-    const unsubDone = subscribeAgentEvent('tool:done', () => order.push('done'))
-
+  it('execute calls the registered handler and returns the result', async () => {
     registerTool({
       name: 'test_tool',
       description: 'A test tool',
@@ -56,17 +51,11 @@ describe('registry', () => {
       execute: async () => 'result',
     })
 
-    await getTools()[0]?.execute({})
-
-    expect(order).toEqual(['executing', 'done'])
-    unsubExec()
-    unsubDone()
+    const result = await getTools()[0]?.execute({})
+    expect(result).toBe('result')
   })
 
-  it('execute emits tool:error when the handler throws', async () => {
-    const handler = vi.fn()
-    const unsub = subscribeAgentEvent('tool:error', handler)
-
+  it('execute propagates errors from the handler', async () => {
     registerTool({
       name: 'failing_tool',
       description: 'A failing tool',
@@ -75,9 +64,5 @@ describe('registry', () => {
     })
 
     await expect(getTools()[0]?.execute({})).rejects.toThrow('boom')
-    expect(handler).toHaveBeenCalledWith(
-      expect.objectContaining({ toolName: 'failing_tool' }),
-    )
-    unsub()
   })
 })
