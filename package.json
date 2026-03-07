@@ -1,0 +1,62 @@
+{
+  "name": "react-agent-tool",
+  "version": "0.0.1",
+  "description": "A React hook library for exposing your app's functionality as callable tools to AI agents, built on the WebMCP W3C spec",
+  "keywords": [
+    "WebMCP",
+    "React",
+    "navigator.modelContext",
+    "Agent",
+    "Agentic",
+    "SPA"
+  ],
+  "homepage": "https://github.com/littleplato/react-agent-tool#readme",
+  "bugs": {
+    "url": "https://github.com/littleplato/react-agent-tool/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/littleplato/react-agent-tool.git"
+  },
+  "license": "ISC",
+  "author": "littleplato",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "peerDependencies": {
+    "react": ">=18"
+  },
+  "devDependencies": {
+    "@testing-library/react": "^16.0.0",
+    "@testing-library/jest-dom": "^6.0.0",
+    "@types/react": "^18.0.0",
+    "jsdom": "^25.0.0",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
+    "tsup": "^8.0.0",
+    "typescript": "^5.0.0",
+    "vitest": "^2.0.0"
+  }
+}
