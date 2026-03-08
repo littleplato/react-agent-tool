@@ -1,6 +1,6 @@
 {
   "name": "react-agent-tool",
-  "version": "0.1.0-alpha.0",
+  "version": "0.1.0-alpha.1",
   "description": "A React hook library for exposing your app's functionality as callable tools to AI agents, built on the WebMCP W3C spec",
   "keywords": [
     "WebMCP",
