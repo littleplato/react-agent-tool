@@ -9,7 +9,20 @@ React hooks for exposing your app's functionality as callable tools to AI agents
 
 ```sh
 npm install react-agent-tool
+pnpm add react-agent-tool
+yarn add react-agent-tool
+bun add react-agent-tool
 ```
+
+## Testing in the browser
+
+1. Download [Chrome Beta](https://www.google.com/chrome/beta/) (v146+)
+2. Enable the WebMCP flag: `chrome://flags/#enable-webmcp-testing`
+3. Install the [WebMCP Model Context Tool Inspector](https://chromewebstore.google.com/detail/webmcp-model-context-tool/gbpdfapgefenggkahomfgkhfehlcenpd) extension
+
+The inspector lets you see registered tools and call them directly from the browser.
+
+---
 
 ## Setup
 
@@ -152,6 +165,10 @@ useAgentTool({
   execute: async ({ city }) => { /* city: string */ },
 })
 ```
+
+## Troubleshooting
+
+**Invalid hook call (pnpm + Vite):** add `resolve: { dedupe: ['react', 'react-dom'] }` to your `vite.config.ts`.
 
 ## License
 
