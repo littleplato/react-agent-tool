@@ -1,12 +1,28 @@
 # react-agent-tool
 
+[![CI](https://github.com/littleplato/react-agent-tool/actions/workflows/ci.yml/badge.svg)](https://github.com/littleplato/react-agent-tool/actions/workflows/ci.yml)
+[![Release](https://github.com/littleplato/react-agent-tool/actions/workflows/release.yml/badge.svg)](https://github.com/littleplato/react-agent-tool/actions/workflows/release.yml)
+
 React hooks for exposing your app's functionality as callable tools to AI agents, built on the [WebMCP W3C spec](https://github.com/webmachinelearning/webmcp).
 
 ## Install
 
 ```sh
 npm install react-agent-tool
+pnpm add react-agent-tool
+yarn add react-agent-tool
+bun add react-agent-tool
 ```
+
+## Testing in the browser
+
+1. Download [Chrome Beta](https://www.google.com/chrome/beta/) (v146+)
+2. Enable the WebMCP flag: `chrome://flags/#enable-webmcp-testing`
+3. Install the [WebMCP Model Context Tool Inspector](https://chromewebstore.google.com/detail/webmcp-model-context-tool/gbpdfapgefenggkahomfgkhfehlcenpd) extension
+
+The inspector lets you see registered tools and call them directly from the browser.
+
+---
 
 ## Setup
 
@@ -58,7 +74,7 @@ function FlightSearch() {
 
 | Option | Type | Description |
 |---|---|---|
-| `name` | `string` | Tool identifier — must be unique |
+| `name` | `string` | Tool identifier, must be unique |
 | `description` | `string` | Shown to the agent to describe what this tool does |
 | `inputSchema` | `JsonSchema` | JSON Schema for the tool's input |
 | `execute` | `(input) => Promise<unknown>` | Called when the agent invokes the tool |
@@ -76,7 +92,7 @@ function FlightSearch() {
 
 ## `useAgentContext`
 
-Exposes read-only React state for agents to observe. Use this when the value lives in React state or props — not a global singleton.
+Exposes read-only React state for agents to observe. Use this when the value lives in React state or props, not a global singleton.
 
 ```tsx
 import { useAgentContext } from 'react-agent-tool'
@@ -94,7 +110,7 @@ function Cart() {
 }
 ```
 
-The value is snapshotted at the time the agent reads it, so it always reflects the current state — even if the user made changes between agent actions.
+The value is snapshotted at the time the agent reads it, so it always reflects current state, even if the user made changes between agent actions.
 
 ---
 
@@ -105,7 +121,7 @@ Lets any component react to agent activity without being coupled to the tool com
 ```tsx
 import { useAgentEvent } from 'react-agent-tool'
 
-// Global indicator — fires for any tool
+// Global indicator, fires for any tool
 function AgentBanner() {
   const [active, setActive] = useState(false)
   useAgentEvent('tool:executing', () => setActive(true))
@@ -135,7 +151,7 @@ function FlightSearchIndicator() {
 
 ## TypeScript
 
-Input schemas are inferred — `execute` receives a fully typed argument:
+Input schemas are inferred. `execute` receives a fully typed argument:
 
 ```ts
 useAgentTool({
@@ -149,6 +165,16 @@ useAgentTool({
   execute: async ({ city }) => { /* city: string */ },
 })
 ```
+
+## How it works
+
+`react-agent-tool` is a thin wrapper around the [WebMCP W3C spec](https://github.com/webmachinelearning/webmcp) (`navigator.modelContext`). Hooks talk directly to the browser API. No intermediary server, no WebSocket, no SDK to update.
+
+When a browser natively supports `navigator.modelContext` (Chrome v146+), `installPolyfill()` is a no-op and the library adds zero overhead. When native support isn't available, the polyfill installs a compatible implementation so your code works unchanged today and requires no migration when native support lands everywhere.
+
+## Troubleshooting
+
+**Invalid hook call (pnpm + Vite):** add `resolve: { dedupe: ['react', 'react-dom'] }` to your `vite.config.ts`.
 
 ## License
 
