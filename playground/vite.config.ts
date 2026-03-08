@@ -6,8 +6,6 @@ import { resolve } from 'path'
 export default defineConfig({
   plugins: [react(), tailwindcss()],
   resolve: {
-    alias: {
-      'react-agent-tool': resolve(__dirname, '../src/index.ts'),
-    },
+    dedupe: ['react', 'react-dom'],
   },
 })

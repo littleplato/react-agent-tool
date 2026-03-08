@@ -65,12 +65,16 @@ describe('useAgentEvent', () => {
     function TestComponent() {
       const [n, setN] = useState(0)
       useAgentEvent('tool:executing', () => handler(n))
-      return <button onClick={() => setN(x => x + 1)}>tick</button>
+      return <button onClick={() => setN((x) => x + 1)}>tick</button>
     }
 
     const { getByText } = render(<TestComponent />)
-    await act(async () => { getByText('tick').click() })
-    await act(async () => { getByText('tick').click() })
+    await act(async () => {
+      getByText('tick').click()
+    })
+    await act(async () => {
+      getByText('tick').click()
+    })
     act(() => emitAgentEvent('tool:executing', { toolName: 'any_tool' }))
     expect(handler).toHaveBeenCalledTimes(1)
   })

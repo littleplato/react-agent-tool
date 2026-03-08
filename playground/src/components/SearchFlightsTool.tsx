@@ -12,7 +12,7 @@ const SEARCH_FLIGHTS_SCHEMA = {
 }
 
 const searchFlights = async (origin: string, destination: string) => {
-  await new Promise(r => setTimeout(r, 600))
+  await new Promise((r) => setTimeout(r, 600))
   return { flights: [`${origin}→${destination} 09:00`, `${origin}→${destination} 14:30`] }
 }
 
@@ -27,8 +27,8 @@ export const SearchFlightsTool = () => {
   const onSimulate = () => {
     emitAgentEvent('tool:executing', { toolName: 'search_flights' })
     searchFlights('SIN', 'NRT')
-      .then(result => emitAgentEvent('tool:done', { toolName: 'search_flights', result }))
-      .catch(error => {
+      .then((result) => emitAgentEvent('tool:done', { toolName: 'search_flights', result }))
+      .catch((error) => {
         const err = error instanceof Error ? error : new Error(String(error))
         emitAgentEvent('tool:error', { toolName: 'search_flights', error: err })
       })

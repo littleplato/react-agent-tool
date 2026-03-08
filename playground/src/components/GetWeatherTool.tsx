@@ -9,7 +9,7 @@ const GET_WEATHER_SCHEMA = {
 }
 
 const getWeather = async (city: string) => {
-  await new Promise(r => setTimeout(r, 300))
+  await new Promise((r) => setTimeout(r, 300))
   return { city, temp: '22°C', condition: 'Sunny' }
 }
 
@@ -24,8 +24,8 @@ export const GetWeatherTool = () => {
   const onSimulate = () => {
     emitAgentEvent('tool:executing', { toolName: 'get_weather' })
     getWeather('Singapore')
-      .then(result => emitAgentEvent('tool:done', { toolName: 'get_weather', result }))
-      .catch(error => {
+      .then((result) => emitAgentEvent('tool:done', { toolName: 'get_weather', result }))
+      .catch((error) => {
         const err = error instanceof Error ? error : new Error(String(error))
         emitAgentEvent('tool:error', { toolName: 'get_weather', error: err })
       })

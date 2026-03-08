@@ -38,14 +38,14 @@ function TestTool({
 }
 
 function simulateCall(name: string) {
-  const tool = navigator.modelContext?.getTools().find(t => t.name === name)
+  const tool = navigator.modelContext?.getTools().find((t) => t.name === name)
   return tool?.execute({})
 }
 
 describe('useAgentTool', () => {
   it('registers the tool on mount', () => {
     render(<TestTool />)
-    expect(navigator.modelContext?.getTools().map(t => t.name)).toContain('test_tool')
+    expect(navigator.modelContext?.getTools().map((t) => t.name)).toContain('test_tool')
   })
 
   it('unregisters the tool on unmount', () => {
@@ -80,40 +80,53 @@ describe('useAgentTool', () => {
       return (
         <>
           <TestTool execute={async () => n} />
-          <button onClick={() => setN(x => x + 1)}>tick</button>
+          <button onClick={() => setN((x) => x + 1)}>tick</button>
         </>
       )
     }
 
     const { getByText } = render(<Parent />)
     expect(callCount).toBe(1)
-    await act(async () => { getByText('tick').click() })
+    await act(async () => {
+      getByText('tick').click()
+    })
     expect(callCount).toBe(1) // still 1 — execute ref updated, no re-register
   })
 
   it('state.isExecuting is true during execution and false after', async () => {
     let settle!: () => void
-    const execute = () => new Promise<string>(resolve => { settle = () => resolve('done') })
+    const execute = () =>
+      new Promise<string>((resolve) => {
+        settle = () => resolve('done')
+      })
 
     const { getByTestId } = render(<TestTool execute={execute} />)
     expect(getByTestId('executing').textContent).toBe('false')
 
-    act(() => { simulateCall('test_tool') })
+    act(() => {
+      simulateCall('test_tool')
+    })
     await waitFor(() => expect(getByTestId('executing').textContent).toBe('true'))
 
-    await act(async () => { settle() })
+    await act(async () => {
+      settle()
+    })
     await waitFor(() => expect(getByTestId('executing').textContent).toBe('false'))
   })
 
   it('state.lastResult captures the result', async () => {
     const { getByTestId } = render(<TestTool execute={async () => ({ count: 42 })} />)
 
-    await act(async () => { await simulateCall('test_tool') })
+    await act(async () => {
+      await simulateCall('test_tool')
+    })
     expect(getByTestId('result').textContent).toBe('{"count":42}')
   })
 
   it('state.error captures thrown errors', async () => {
-    const execute = async () => { throw new Error('boom') }
+    const execute = async () => {
+      throw new Error('boom')
+    }
     const { getByTestId } = render(<TestTool execute={execute} />)
 
     await act(async () => {
@@ -124,7 +137,9 @@ describe('useAgentTool', () => {
 
   it('state.lastResult does not persist across remounts', async () => {
     const { getByTestId, unmount } = render(<TestTool execute={async () => 'first'} />)
-    await act(async () => { await simulateCall('test_tool') })
+    await act(async () => {
+      await simulateCall('test_tool')
+    })
     expect(getByTestId('result').textContent).toBe('"first"')
 
     unmount()

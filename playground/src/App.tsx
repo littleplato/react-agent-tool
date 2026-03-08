@@ -16,7 +16,7 @@ export default function App() {
   const [mounted, setMounted] = useState<Record<string, boolean>>({})
 
   function toggle(id: string) {
-    setMounted(prev => ({ ...prev, [id]: !prev[id] }))
+    setMounted((prev) => ({ ...prev, [id]: !prev[id] }))
   }
 
   return (
@@ -41,24 +41,23 @@ export default function App() {
           ))}
         </div>
 
-        {TOOLS.map(({ id, Component }) =>
-          mounted[id] ? <Component key={id} /> : null
-        )}
+        {TOOLS.map(({ id, Component }) => (mounted[id] ? <Component key={id} /> : null))}
       </section>
 
       <section className="mb-6">
         <h3 className="mb-2 font-semibold">useAgentEvent</h3>
         <p className="mb-2 text-gray-500 text-sm">
-          The blue banner at the top uses <code>useAgentEvent</code> with no filter — fires for any tool.
-          The dot next to each tool name uses it with a <code>toolName</code> filter — scoped to that tool only.
+          The blue banner at the top uses <code>useAgentEvent</code> with no filter — fires for any
+          tool. The dot next to each tool name uses it with a <code>toolName</code> filter — scoped
+          to that tool only.
         </p>
       </section>
 
       <section className="mb-6">
         <h3 className="mb-2 font-semibold">useAgentContext</h3>
         <p className="mb-3 text-gray-500 text-sm">
-          Cart state lives only in React — no global singleton. Tick items, then simulate
-          an agent read to see the snapshot taken at call time.
+          Cart state lives only in React — no global singleton. Tick items, then simulate an agent
+          read to see the snapshot taken at call time.
         </p>
         <ShoppingCart />
       </section>

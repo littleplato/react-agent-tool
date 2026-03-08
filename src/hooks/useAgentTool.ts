@@ -36,7 +36,7 @@ export function useAgentTool<T extends JsonSchema>({
         name,
         description,
         inputSchema,
-        execute: async input => {
+        execute: async (input) => {
           emitAgentEvent('tool:executing', { toolName: name })
           try {
             const result = await executeRef.current(input as InferInput<T>)
@@ -63,18 +63,18 @@ export function useAgentTool<T extends JsonSchema>({
     const unsubs = [
       subscribeAgentEvent('tool:executing', ({ toolName }) => {
         if (toolName !== name) return
-        setState(prev => ({ ...prev, isExecuting: true, error: null }))
+        setState((prev) => ({ ...prev, isExecuting: true, error: null }))
       }),
       subscribeAgentEvent('tool:done', ({ toolName, result }) => {
         if (toolName !== name) return
-        setState(prev => ({ ...prev, isExecuting: false, lastResult: result }))
+        setState((prev) => ({ ...prev, isExecuting: false, lastResult: result }))
       }),
       subscribeAgentEvent('tool:error', ({ toolName, error }) => {
         if (toolName !== name) return
-        setState(prev => ({ ...prev, isExecuting: false, error }))
+        setState((prev) => ({ ...prev, isExecuting: false, error }))
       }),
     ]
-    return () => unsubs.forEach(fn => fn())
+    return () => unsubs.forEach((fn) => fn())
   }, [name])
 
   return { state }

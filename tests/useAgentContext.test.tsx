@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach } from 'vitest'
 import { render, act } from '@testing-library/react'
-import { useRef, useState } from 'react'
+import { useState } from 'react'
 import { installPolyfill, _resetPolyfill } from '../src/polyfill'
 import { useAgentContext } from '../src/hooks/useAgentContext'
 
@@ -10,7 +10,7 @@ beforeEach(() => {
 })
 
 function simulateCall(name: string) {
-  const tool = navigator.modelContext?.getTools().find(t => t.name === name)
+  const tool = navigator.modelContext?.getTools().find((t) => t.name === name)
   return tool?.execute({})
 }
 
@@ -21,7 +21,7 @@ describe('useAgentContext', () => {
       return null
     }
     render(<TestContext />)
-    expect(navigator.modelContext?.getTools().map(t => t.name)).toContain('current_user')
+    expect(navigator.modelContext?.getTools().map((t) => t.name)).toContain('current_user')
   })
 
   it('unregisters the context on unmount', () => {
@@ -40,7 +40,7 @@ describe('useAgentContext', () => {
       return null
     }
     render(<TestContext />)
-    const tool = navigator.modelContext?.getTools().find(t => t.name === 'current_user')
+    const tool = navigator.modelContext?.getTools().find((t) => t.name === 'current_user')
     expect(tool?.readOnlyHint).toBe(true)
   })
 
@@ -68,12 +68,14 @@ describe('useAgentContext', () => {
     function TestContext() {
       const [n, setN] = useState(0)
       useAgentContext('current_user', 'The current user', () => n)
-      return <button onClick={() => setN(x => x + 1)}>tick</button>
+      return <button onClick={() => setN((x) => x + 1)}>tick</button>
     }
 
     const { getByText } = render(<TestContext />)
     expect(callCount).toBe(1)
-    await act(async () => { getByText('tick').click() })
+    await act(async () => {
+      getByText('tick').click()
+    })
     expect(callCount).toBe(1)
   })
 
@@ -84,7 +86,7 @@ describe('useAgentContext', () => {
       return null
     }
     render(<TestContext />)
-    const names = navigator.modelContext?.getTools().map(t => t.name)
+    const names = navigator.modelContext?.getTools().map((t) => t.name)
     expect(names).toContain('current_user')
     expect(names).toContain('app_state')
   })

@@ -37,7 +37,9 @@
     }
   },
   "pnpm": {
-    "onlyBuiltDependencies": ["esbuild"]
+    "onlyBuiltDependencies": [
+      "esbuild"
+    ]
   },
   "files": [
     "dist"
@@ -46,20 +48,38 @@
     "build": "tsup",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "*.{ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.json": "prettier --write"
   },
   "peerDependencies": {
     "react": ">=18"
   },
   "devDependencies": {
-    "@testing-library/react": "^16.0.0",
+    "@eslint/js": "^9.39.4",
     "@testing-library/jest-dom": "^6.0.0",
+    "@testing-library/react": "^16.0.0",
     "@types/react": "^18.0.0",
+    "eslint": "^9.39.4",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-react-hooks": "^7.0.1",
+    "husky": "^9.1.7",
     "jsdom": "^25.0.0",
+    "lint-staged": "^16.3.2",
+    "prettier": "^3.8.1",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "tsup": "^8.0.0",
     "typescript": "^5.0.0",
+    "typescript-eslint": "^8.56.1",
     "vitest": "^2.0.0"
   }
 }
