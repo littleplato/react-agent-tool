@@ -7,15 +7,14 @@ export const ShoppingCart = () => {
   const [items, setItems] = useState<string[]>([])
   const [lastSnapshot, setLastSnapshot] = useState<unknown>(null)
 
-  useAgentContext(
-    'shopping_cart',
-    'Current items in the shopping cart and their count',
-    () => ({ items, count: items.length }),
-  )
+  useAgentContext('shopping_cart', 'Current items in the shopping cart and their count', () => ({
+    items,
+    count: items.length,
+  }))
 
   const toggle = (product: string) => {
-    setItems(prev =>
-      prev.includes(product) ? prev.filter(p => p !== product) : [...prev, product],
+    setItems((prev) =>
+      prev.includes(product) ? prev.filter((p) => p !== product) : [...prev, product],
     )
   }
 
@@ -30,7 +29,7 @@ export const ShoppingCart = () => {
       </div>
 
       <div className="flex gap-4 flex-wrap mb-3">
-        {PRODUCTS.map(product => (
+        {PRODUCTS.map((product) => (
           <label key={product} className="flex items-center gap-1 cursor-pointer">
             <input
               type="checkbox"

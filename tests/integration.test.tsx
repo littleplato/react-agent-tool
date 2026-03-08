@@ -29,7 +29,7 @@ describe('integration', () => {
     const { getByTestId } = render(<FlightSearch />)
 
     await act(async () => {
-      const tool = navigator.modelContext?.getTools().find(t => t.name === 'search_flights')
+      const tool = navigator.modelContext?.getTools().find((t) => t.name === 'search_flights')
       await tool?.execute({})
     })
 
@@ -47,10 +47,12 @@ describe('integration', () => {
 
     const { getByText } = render(<UserContext />)
 
-    await act(async () => { getByText('change').click() })
+    await act(async () => {
+      getByText('change').click()
+    })
 
     const result = await act(async () => {
-      const tool = navigator.modelContext?.getTools().find(t => t.name === 'current_user')
+      const tool = navigator.modelContext?.getTools().find((t) => t.name === 'current_user')
       return tool?.execute({})
     })
 
@@ -75,10 +77,15 @@ describe('integration', () => {
       return null
     }
 
-    render(<><Watcher /><Tool /></>)
+    render(
+      <>
+        <Watcher />
+        <Tool />
+      </>,
+    )
 
     await act(async () => {
-      const tool = navigator.modelContext?.getTools().find(t => t.name === 'ping')
+      const tool = navigator.modelContext?.getTools().find((t) => t.name === 'ping')
       await tool?.execute({})
     })
 

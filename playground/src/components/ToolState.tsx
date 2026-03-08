@@ -8,7 +8,9 @@ export const ToolState = ({ name, state, onSimulate }: ToolStateProps) => (
   <div className="border border-gray-200 rounded p-3 mb-2">
     <div className="flex justify-between items-center">
       <span>
-        <span className={`inline-block w-2 h-2 rounded-full mr-1.5 align-middle ${state.isExecuting ? 'bg-green-600' : 'bg-gray-300'}`} />
+        <span
+          className={`inline-block w-2 h-2 rounded-full mr-1.5 align-middle ${state.isExecuting ? 'bg-green-600' : 'bg-gray-300'}`}
+        />
         <strong>{name}</strong>
       </span>
       <button
@@ -20,9 +22,17 @@ export const ToolState = ({ name, state, onSimulate }: ToolStateProps) => (
       </button>
     </div>
     <div className="mt-2 text-sm">
-      <div>isExecuting: <code>{String(state.isExecuting)}</code></div>
-      <div>lastResult: <code>{JSON.stringify(state.lastResult)}</code></div>
-      {state.error && <div className="text-red-600">error: <code>{state.error.message}</code></div>}
+      <div>
+        isExecuting: <code>{String(state.isExecuting)}</code>
+      </div>
+      <div>
+        lastResult: <code>{JSON.stringify(state.lastResult)}</code>
+      </div>
+      {state.error && (
+        <div className="text-red-600">
+          error: <code>{state.error.message}</code>
+        </div>
+      )}
     </div>
   </div>
 )

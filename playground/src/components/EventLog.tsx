@@ -20,17 +20,22 @@ export const EventLog = () => {
 
   useEffect(() => {
     const add = (type: LogEntry['type'], payload: unknown) =>
-      setLog(prev => [
+      setLog((prev) => [
         ...prev,
-        { id: counter.current++, time: new Date().toLocaleTimeString(), type, payload: JSON.stringify(payload) },
+        {
+          id: counter.current++,
+          time: new Date().toLocaleTimeString(),
+          type,
+          payload: JSON.stringify(payload),
+        },
       ])
 
     const unsubs = [
-      subscribeAgentEvent('tool:executing', p => add('tool:executing', p)),
-      subscribeAgentEvent('tool:done', p => add('tool:done', p)),
-      subscribeAgentEvent('tool:error', p => add('tool:error', p)),
+      subscribeAgentEvent('tool:executing', (p) => add('tool:executing', p)),
+      subscribeAgentEvent('tool:done', (p) => add('tool:done', p)),
+      subscribeAgentEvent('tool:error', (p) => add('tool:error', p)),
     ]
-    return () => unsubs.forEach(fn => fn())
+    return () => unsubs.forEach((fn) => fn())
   }, [])
 
   return (
@@ -45,15 +50,17 @@ export const EventLog = () => {
         </button>
       </h3>
       <div className="border border-gray-300 rounded p-3 min-h-[120px] max-h-80 overflow-y-auto text-sm">
-        {log.length === 0
-          ? <span className="text-gray-400">No events yet.</span>
-          : log.map(entry => (
-              <div key={entry.id} className="mb-1.5">
-                <span className="text-gray-400">[{entry.time}]</span>{' '}
-                <span className={`font-bold ${EVENT_COLORS[entry.type]}`}>{entry.type}</span>
-                {' '}— {entry.payload}
-              </div>
-            ))}
+        {log.length === 0 ? (
+          <span className="text-gray-400">No events yet.</span>
+        ) : (
+          log.map((entry) => (
+            <div key={entry.id} className="mb-1.5">
+              <span className="text-gray-400">[{entry.time}]</span>{' '}
+              <span className={`font-bold ${EVENT_COLORS[entry.type]}`}>{entry.type}</span> —{' '}
+              {entry.payload}
+            </div>
+          ))
+        )}
       </div>
     </section>
   )

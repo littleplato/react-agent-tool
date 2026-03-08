@@ -9,14 +9,17 @@ export const FailingTool = () => {
     name: 'failing_tool',
     description: 'Always throws — demonstrates tool:error',
     inputSchema: FAILING_SCHEMA,
-    execute: async () => { throw new Error('Something went wrong') },
+    execute: async () => {
+      throw new Error('Something went wrong')
+    },
   })
 
   const onSimulate = () => {
     const err = new Error('Something went wrong')
     emitAgentEvent('tool:executing', { toolName: 'failing_tool' })
-    Promise.reject(err)
-      .catch(() => emitAgentEvent('tool:error', { toolName: 'failing_tool', error: err }))
+    Promise.reject(err).catch(() =>
+      emitAgentEvent('tool:error', { toolName: 'failing_tool', error: err }),
+    )
   }
 
   return <ToolState name="failing_tool" state={state} onSimulate={onSimulate} />

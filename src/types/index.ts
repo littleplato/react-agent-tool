@@ -34,41 +34,34 @@ type PrimitiveTypeMap = {
 // preserving optionality — required for toEqualTypeOf to see equality.
 type Prettify<T> = { [K in keyof T]: T[K] }
 
-type RequiredProps<
-  P extends Record<string, JsonSchema>,
-  R extends readonly string[],
-> = {
+type RequiredProps<P extends Record<string, JsonSchema>, R extends readonly string[]> = {
   [K in keyof P as K extends R[number] ? K : never]: InferInput<P[K]>
 }
 
-type OptionalProps<
-  P extends Record<string, JsonSchema>,
-  R extends readonly string[],
-> = {
+type OptionalProps<P extends Record<string, JsonSchema>, R extends readonly string[]> = {
   [K in keyof P as K extends R[number] ? never : K]?: InferInput<P[K]>
 }
 
-export type InferInput<T extends JsonSchema> =
-  T extends {
-    type: 'object'
-    properties: infer P extends Record<string, JsonSchema>
-    required: infer R extends readonly string[]
-  }
-    ? Prettify<RequiredProps<P, R> & OptionalProps<P, R>>
-    : T extends {
-          type: 'object'
-          properties: infer P extends Record<string, JsonSchema>
-        }
-      ? Prettify<{ [K in keyof P]?: InferInput<P[K]> }>
-      : T extends { type: 'object' }
-        ? Record<string, unknown>
-        : T extends { type: 'array'; items: infer I extends JsonSchema }
-          ? InferInput<I>[]
-          : T extends { type: 'array' }
-            ? unknown[]
-            : T extends { type: infer U extends keyof PrimitiveTypeMap }
-              ? PrimitiveTypeMap[U]
-              : unknown
+export type InferInput<T extends JsonSchema> = T extends {
+  type: 'object'
+  properties: infer P extends Record<string, JsonSchema>
+  required: infer R extends readonly string[]
+}
+  ? Prettify<RequiredProps<P, R> & OptionalProps<P, R>>
+  : T extends {
+        type: 'object'
+        properties: infer P extends Record<string, JsonSchema>
+      }
+    ? Prettify<{ [K in keyof P]?: InferInput<P[K]> }>
+    : T extends { type: 'object' }
+      ? Record<string, unknown>
+      : T extends { type: 'array'; items: infer I extends JsonSchema }
+        ? InferInput<I>[]
+        : T extends { type: 'array' }
+          ? unknown[]
+          : T extends { type: infer U extends keyof PrimitiveTypeMap }
+            ? PrimitiveTypeMap[U]
+            : unknown
 
 // ---------------------------------------------------------------------------
 // Tool definition

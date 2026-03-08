@@ -11,7 +11,7 @@ describe('registry', () => {
       inputSchema: { type: 'object' },
       execute: async () => 'ok',
     })
-    expect(getTools().map(t => t.name)).toContain('test_tool')
+    expect(getTools().map((t) => t.name)).toContain('test_tool')
   })
 
   it('duplicate name: last registration wins', () => {
@@ -60,7 +60,9 @@ describe('registry', () => {
       name: 'failing_tool',
       description: 'A failing tool',
       inputSchema: { type: 'object' },
-      execute: async () => { throw new Error('boom') },
+      execute: async () => {
+        throw new Error('boom')
+      },
     })
 
     await expect(getTools()[0]?.execute({})).rejects.toThrow('boom')

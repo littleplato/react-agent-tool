@@ -11,7 +11,7 @@ export function useAgentEvent<T extends AgentEventType>(
   handlerRef.current = handler
 
   useEffect(() => {
-    return subscribeAgentEvent(type, payload => {
+    return subscribeAgentEvent(type, (payload) => {
       if (toolName !== undefined) {
         const p = payload as { toolName: string }
         if (p.toolName !== toolName) return
