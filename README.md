@@ -1,5 +1,8 @@
 # react-agent-tool
 
+[![CI](https://github.com/littleplato/react-agent-tool/actions/workflows/ci.yml/badge.svg)](https://github.com/littleplato/react-agent-tool/actions/workflows/ci.yml)
+[![Release](https://github.com/littleplato/react-agent-tool/actions/workflows/release.yml/badge.svg)](https://github.com/littleplato/react-agent-tool/actions/workflows/release.yml)
+
 React hooks for exposing your app's functionality as callable tools to AI agents, built on the [WebMCP W3C spec](https://github.com/webmachinelearning/webmcp).
 
 ## Install
